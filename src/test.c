@@ -16,7 +16,7 @@ void	print_struct(t_all inp)
 {
 	int	fd;
 
-	fd = open("./lecture.txt", O_WRONLY);
+	fd = open("./lecture.txt", O_WRONLY | O_APPEND);
 	ft_putendl_fd("map :", fd);
 	put_2d(inp.map, fd);
 	ft_putendl_fd("piece :", fd);
@@ -74,58 +74,44 @@ void	count_blocs(t_all *inp)
 {
 	int	i;
 	int	j;
+	int	count;
 
 	j = 0;
+	count = 0;
 	while (j < inp->size_piece[1])
 	{
 		i = 0;
 		while (i < inp->size_piece[0])
 		{
 			if (inp->piece[j][i] == '*')
-				inp->nb++;
+				count++;
 			i++;
 		}
 		j++;
 	}
+	inp->nb = count;
 }
 
-t_all	*lecture(t_all *inp, int fd)
+int	reading(t_all *inp, int fd)
 {
 	static int	turn;
+	int	tmp;
 
-	if (!turn)
-		turn = first_line(inp, fd);
-	get_size(inp->size_map, fd);
-	init_2d(&(inp->map), (int const *)inp->size_map);
+	tmp = 0;
+	if (!(turn = first_line(inp, fd, turn)))
+		return (0);
+	if (!get_size(inp->size_map, fd, &tmp))
+		return (0);
+	init_2d(&(inp->map), (int const *)inp->size_map, 0);
 	get_map(inp, fd);
-	get_size(inp->size_piece, fd);
-	init_2d(&(inp->piece), (int const *)inp->size_piece);
+	if (!get_size(inp->size_piece, fd, &(inp->size_chd)))
+		return (0);
+	init_2d(&(inp->piece), (int const *)inp->size_piece, inp->size_chd);
 	if (!get_piece(inp, fd))
 		free_2d(&(inp->map));
 	count_blocs(inp);
 	print_struct(*inp);
-	return (inp);
+	return (1);
 }
 
-int main()
-{
-	int		fd;
-	t_all	*inp;
-	t_list	*pos;
-	char	**score;
 
-	if (!(inp = (t_all*)malloc(sizeof(t_all))))
-		return (0);
-	fd = open("./tst", O_RDONLY);
-	lecture(inp, fd);
-	close(fd);
-	pos = pc_start(inp);
-	score = score_map();
-	end_map(score, inp, pos);
-	pick_position(score, pos);
-	put_piece(inp, pos);
-	fd = open("map.txt", O_WRONLY);
-	put_2d(inp->map, fd);
-	close(fd);
-	return 0;
-}

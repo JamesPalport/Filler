@@ -1,6 +1,5 @@
-seed = 8826
-O: timedout
-../amerrouc.filler: Segfault at 0
-players/abanlin.filler won
+seed = 3243
+O: error on input
+players/carli.filler won
 Score:
-0AGAINST146
+5AGAINST55
