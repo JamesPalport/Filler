@@ -6,26 +6,30 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 15:36:28 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/16 15:48:18 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:15:09 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-t_all	*init_all(t_all *all)
+t_all	*init_all(t_all **all)
 {
-	if (!(all = (t_all *)malloc(sizeof(t_all))))
+	if (!(*all = (t_all *)malloc(sizeof(t_all))))
 		return (NULL);
-	all->map = NULL;
-	all->piece = NULL;
-	all->size_map[0] = 0;
-	all->size_map[1] = 0;
-	all->size_piece[0] = 0;
-	all->size_piece[1] = 0;
-	all->size_chd = 0;
-	all->c = '\0';
-	all->nb = 0;
-	return (all);
+	(*all)->map = NULL;
+	(*all)->piece = NULL;
+	(*all)->size_map[0] = 0;
+	(*all)->size_map[1] = 0;
+	(*all)->size_piece[0] = 0;
+	(*all)->size_piece[1] = 0;
+	(*all)->size_chd = 0;
+	(*all)->c = '\0';
+	(*all)->nb = 0;
+	(*all)->cm_self[0] = 0;
+	(*all)->cm_self[1] = 0;
+	(*all)->cm_ene[0] = 0;
+	(*all)->cm_ene[1] = 0;
+	return (*all);
 }
 
 #include <sys/types.h>

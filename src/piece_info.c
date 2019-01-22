@@ -6,27 +6,28 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 10:44:27 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/16 15:51:08 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:36:57 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-t_list	*pc_start(t_all *all)
+int		*pc_start(t_all *all)
 {
-	t_list	*pos;
-	int		position[2];
+	int		*position;
 	int		i;
 	int		j;
 
-	position[0] = -1;
+	if (!(position = (int *)malloc(sizeof(int) * 2)))
+		return (NULL);
+	position[0] = all->size_map[0];
 	j = 0;
-	while (j < all->size_map[1] && position[0] == -1)
+	while (j < all->size_map[1])
 	{
 		i = 0;
-		while (i < all->size_map[0] && position[0] == -1)
+		while (i < all->size_map[0])
 		{
-			if (all->map[j][i] == all->c)
+			if (all->map[j][i] == all->c )
 			{
 				position[0] = i;
 				position[1] = j;
@@ -35,6 +36,5 @@ t_list	*pc_start(t_all *all)
 		}
 		j++;
 	}
-	pos = ft_lstnew(position, sizeof(int) * 2);
-	return (pos);
+	return (position);
 }

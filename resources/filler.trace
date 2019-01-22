@@ -1,5 +1,6 @@
-seed = 3243
+seed = 5315
 O: error on input
-players/carli.filler won
+./amerrouc.filler: Segfault at 2
+players/abanlin.filler won
 Score:
-5AGAINST55
+2AGAINST158

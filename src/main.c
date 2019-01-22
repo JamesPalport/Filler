@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/16 15:13:20 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/16 16:03:23 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/01/22 12:52:36 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 int main()
 {
 	int		fd;
-	t_all	all;
-	t_list	*pos;
+	t_all	*all;
+	int		*pos;
 	char	**score;
 	int		gu;
 	int		fd2;
@@ -32,17 +32,17 @@ int main()
 	fd2 = open("map.txt", O_WRONLY);
 	while (gu)
 	{
-		if (reading(&all, fd))
+		if (reading(all, fd))
 		{
-		pos = pc_start(&all);
-		score = score_map();
-		end_map(score, &all, pos);
+		pos = pc_start(all);
+		score = score_map(all);
+		end_map(score, all, pos);
 		pick_position(score, pos);
-		if (((int *)pos->content)[0] < 0)
+		if (pos[0] < 0)
 			gu = 0;
 		if (gu)
 		{
-			ft_printf("%d %d\n", ((int *)pos->content)[1], ((int *)pos->content)[0]);
+			ft_printf("%d %d\n", pos[1], pos[0]);
 			/*put_piece(&all, pos);*/
 			/*put_2d(&all->map, 1);
 			put_2d(&all->map, fd2);*/

@@ -92,6 +92,42 @@ void	count_blocs(t_all *inp)
 	inp->nb = count;
 }
 
+void	adj_cm(t_all *all)
+{
+	all->cm_self[0] /= all->nb;
+	all->cm_self[1] /= all->nb;
+	all->cm_ene[0] /= all->nb;
+	all->cm_ene[1] /= all->nb;
+}
+
+void	center_mass(t_all *all)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	while (j < all->size_map[1])
+	{
+		i = 0;
+		while (all->map[j][i])
+		{
+			if (all->map[j][i] == all->c)
+			{
+				all->cm_self[1] += j;
+				all->cm_self[0] += i;
+			}
+			else if (all->map[j][i] != '.')
+			{
+				all->cm_ene[1] += j;
+				all->cm_ene[0] += i;
+			}
+			i++;
+		}
+		j++;
+	}
+	adj_cm(all);
+}
+
 int	reading(t_all *inp, int fd)
 {
 	static int	turn;
@@ -110,8 +146,7 @@ int	reading(t_all *inp, int fd)
 	if (!get_piece(inp, fd))
 		free_2d(&(inp->map));
 	count_blocs(inp);
+	center_mass(inp);
 	print_struct(*inp);
 	return (1);
 }
-
-
