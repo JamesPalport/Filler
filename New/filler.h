@@ -23,7 +23,7 @@ typedef struct	s_all
 {
 	char		**map;
 	char		**piece;
-	int			**score;
+	char		**score;
 	int			size_map[2];
 	int			size_piece[2];
 	int			size_chd;
@@ -48,5 +48,9 @@ void			get_piece(t_all *all, int fd);
 void			reader(t_all *all);
 void			pc_start(t_all *all);
 void			score_map(t_all *all);
+int				is_poss(t_all *all, int *info);
+int				det_score(t_all *all);
+void			end_map(t_all *all);
+void			pick_position(t_all *all);
 
 #endif

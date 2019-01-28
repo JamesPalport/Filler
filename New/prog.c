@@ -18,7 +18,7 @@ void	put_map(t_all *all)
 	close(fd);
 }
 
-void	put_piece(t_all *all)
+void	print_piece(t_all *all)
 {
 	int	fd;
 	int	i;
@@ -52,9 +52,12 @@ void	reader(t_all *all)
 	put_map(all);
 	get_size(all, fd);
 	get_piece(all, fd);
-	put_piece(all);
+	print_piece(all);
 	pc_start(all);
 	score_map(all);
+	end_map(all);
+	pick_position(all);
+	ft_printf("%d %d\n", all->pos[1], all->pos[0]);
 	}
 	close(fd);
 }

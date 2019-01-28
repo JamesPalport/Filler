@@ -12,29 +12,25 @@
 
 #include "filler.h"
 
-int		*pc_start(t_all *all)
+void	pc_start(t_all *all)
 {
-	int		*position;
 	int		i;
 	int		j;
 
-	if (!(position = (int *)malloc(sizeof(int) * 2)))
-		return (NULL);
-	position[0] = all->size_map[0];
+	all->pos[0] = all->size_map[0];
 	j = 0;
 	while (j < all->size_map[1])
 	{
 		i = 0;
 		while (i < all->size_map[0])
 		{
-			if (all->map[j][i] == all->c )
+			if (all->map[j][i] == all->letter[0] )
 			{
-				position[0] = i;
-				position[1] = j;
+				all->pos[0] = i;
+				all->pos[1] = j;
 			}
 			i++;
 		}
 		j++;
 	}
-	return (position);
 }

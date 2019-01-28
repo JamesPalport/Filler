@@ -12,7 +12,8 @@
 
 NAME = amerrouc.filler
 
-SRC = prog.c init.c reading.c tools.c
+SRC = prog.c init.c reading.c tools.c format.c algo.c piece_info.c	\
+		put_piece.c test.c
 
 OBJ = $(SRC:.c=.o)
 

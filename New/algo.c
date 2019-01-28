@@ -31,7 +31,7 @@ int	ft_max(int a, int b)
 	return (a);
 }
 
-int	det_score(t_all *all, int *position)
+int	det_score(t_all *all)
 {
 	int	xm;
 	int	i;
@@ -42,16 +42,16 @@ int	det_score(t_all *all, int *position)
 	xm = -3;
 	min[0] = 10;
 	min[1] = 10;
-	while (position[1] + j < 0)
+	while (all->pos[1] + j < 0)
 		j++;
-	while (position[0] + xm < 0)
+	while (all->pos[0] + xm < 0)
 		xm++;
 	while (j < 3)
 	{
 		i = xm;
 		while (i < 3)
 		{
-			if (all->map[position[1] + j][position[0] + i] != '.')
+			if (all->map[all->pos[1] + j][all->pos[0] + i] != '.')
 			{
 				min[0] = ft_min(min[0], i);
 				min[1] = ft_min(min[1], j);
@@ -92,36 +92,34 @@ void	aggro(char **score, t_all *all)
 	}
 }
 
-char	**score_map(t_all *all)
+void	score_map(t_all *all)
 {
-	char	**score;
 	int	i;
 	int	j;
 
 	j = 0;
-	if (!(score = (char **)malloc(sizeof(char *) * 5)))
-		return (NULL);
+	if (!(all->score = (char **)malloc(sizeof(char *) * 5)))
+		return ;
 	while (j < 7)
-		if (!(score[j++] = (char *)malloc(sizeof(char) * 5)))
-			return (NULL);
+		if (!(all->score[j++] = (char *)malloc(sizeof(char) * 5)))
+			return ;
 	j = 0;
 	while (j < 5)
 	{
 		i = 0;
 		while (i < 5)
 		{
-			score[j][i] = '3' - ft_max(abs(i - 2), abs(j - 2));
+			all->score[j][i] = '3' - ft_max(abs(i - 2), abs(j - 2));
 			i++;
 		}
-		score[j][i] = '\0';
+		all->score[j][i] = '\0';
 		j++;
 	}
-	aggro(score, all);
-	score[j] = NULL;
-	return (score);
+	aggro(all->score, all);
+	all->score[j] = NULL;
 }
 
-void	pick_position(char **score, int *pos)
+void	pick_position(t_all *all)
 {
 	int	position[2];
 	int	i;
@@ -137,21 +135,21 @@ void	pick_position(char **score, int *pos)
 		i = 0;
 		while (i < 5)
 		{
-			if (score[j][i] && score[j][i] > max)
+			if (all->score[j][i] && all->score[j][i] > max)
 			{
-				max = score[j][i];
-				position[0] = i + pos[0] - 2;
-				position[1] = j + pos[1] - 2;
+				max = all->score[j][i];
+				position[0] = i + all->pos[0] - 2;
+				position[1] = j + all->pos[1] - 2;
 			}
 			i++;
 		}
 		j++;
 	}
-	pos[0] = position[0];
-	pos[1] = position[1];
+	all->pos[0] = position[0];
+	all->pos[1] = position[1];
 }
 
-void	end_map(char **score, t_all *all, int *position)
+void	end_map(t_all *all)
 {
 	int	p[2];
 	int	i;
@@ -163,11 +161,11 @@ void	end_map(char **score, t_all *all, int *position)
 		i = 0;
 		while (i < 5)
 		{
-			p[0] = i + position[0] - 2;
-			p[1] = j + position[1] - 2;
-			score[j][i] *= is_poss(all, p);
-			if (!score[j][i])
-				score[j][i] = '0';
+			p[0] = i + all->pos[0] - 2;
+			p[1] = j + all->pos[1] - 2;
+			all->score[j][i] *= is_poss(all, p);
+			if (!all->score[j][i])
+				all->score[j][i] = '0';
 			i++;
 		}
 		j++;

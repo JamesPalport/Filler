@@ -54,7 +54,7 @@ int		is_poss(t_all *all, int *info)
 		j++;
 		pos_y = j + info[1];
 	}
-	if (put[0] == 1 && put[1] == all->nb)
+	if (put[0] == 1 && put[1] == all->nb_sqr)
 		return (1);
 	return (0);
 }
@@ -75,7 +75,7 @@ int		put_piece(t_all *all, int *pos)
 			y = j + pos[1];
 			x = i + pos[0];
 			if (all->piece[j][i] == '*')
-				all->map[y][x] = all->c;
+				all->map[y][x] = all->letter[0];
 			i++;
 		}
 		j++;
@@ -90,5 +90,5 @@ void	chose_position(t_all *all, int **pos)
 
 	score = 10;
 	position = (*pos);
-	det_score(all, position);
+	det_score(all);
 }

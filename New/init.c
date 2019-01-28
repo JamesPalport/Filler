@@ -4,7 +4,7 @@ void	init_all(t_all *all)
 {
 	all->map = NULL;
 	all->piece = NULL;
-	all->score_map = NULL;
+	all->score = NULL;
 	all->size_map[0] = 0;
 	all->size_map[1] = 0;
 	all->size_piece[0] = 0;
