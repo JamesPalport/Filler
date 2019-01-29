@@ -20,6 +20,11 @@ void	init_all(t_all *all)
 	all->pos[0] = 0;
 	all->pos[1] = 0;
 	all->end = 0;
+
+	int	i;
+	i = 0;
+	while(i < 1000)
+		all->read[i++] = NULL;
 }
 
 void	begin_prog(t_all *all, int fd)
@@ -27,6 +32,7 @@ void	begin_prog(t_all *all, int fd)
 	char	*tmp;
 
 	get_next_line(fd, &tmp);
+	all->read[0] = ft_strdup(tmp);
 	if (ft_strncmp(tmp, "$$$ exec p", 10))
 		exit(0);
 	if (tmp[10] == '1')

@@ -33,6 +33,7 @@ typedef struct	s_all
 	int			cm_ene[2];
 	int			pos[2];
 	int			end;
+	char		*read[1000];
 }				t_all;
 
 int				skip_lines(int n, int fd);
@@ -46,6 +47,7 @@ void			get_size(t_all *all, int fd);
 void			get_map(t_all *all, int fd);
 void			get_piece(t_all *all, int fd);
 void			reader(t_all *all);
+void			count_blocs(t_all *all);
 void			pc_start(t_all *all);
 void			score_map(t_all *all);
 int				is_poss(t_all *all, int *info);
