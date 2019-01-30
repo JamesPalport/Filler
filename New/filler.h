@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/10 10:15:39 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/22 12:16:21 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/01/30 14:18:35 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,12 @@ typedef struct	s_all
 	int			size_chd;
 	char		letter[3];
 	int			nb_sqr;
-	int			cm_self[2];
-	int			cm_ene[2];
+	int			cm_self[3];
+	int			cm_ene[3];
 	int			pos[2];
+	int			vect[2];
 	int			end;
-	char		*read[1000];
+	int			retry[2];
 }				t_all;
 
 int				skip_lines(int n, int fd);
@@ -48,6 +49,7 @@ void			get_map(t_all *all, int fd);
 void			get_piece(t_all *all, int fd);
 void			reader(t_all *all);
 void			count_blocs(t_all *all);
+void			center_mass(t_all *all);
 void			pc_start(t_all *all);
 void			score_map(t_all *all);
 int				is_poss(t_all *all, int *info);

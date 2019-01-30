@@ -14,17 +14,18 @@ void	init_all(t_all *all)
 	all->letter[2] = 0;
 	all->cm_self[0] = 0;
 	all->cm_self[1] = 0;
+	all->cm_self[2] = 0;
 	all->cm_ene[0] = 0;
 	all->cm_ene[1] = 0;
+	all->cm_ene[2] = 0;
 	all->nb_sqr = 0;
-	all->pos[0] = 0;
-	all->pos[1] = 0;
+	all->pos[0] = -10;
+	all->pos[1] = -10;
+	all->vect[0] = 0;
+	all->vect[1] = 0;
 	all->end = 0;
-
-	int	i;
-	i = 0;
-	while(i < 1000)
-		all->read[i++] = NULL;
+	all->retry[0] = 0;
+	all->retry[1] = 3;
 }
 
 void	begin_prog(t_all *all, int fd)
@@ -32,7 +33,6 @@ void	begin_prog(t_all *all, int fd)
 	char	*tmp;
 
 	get_next_line(fd, &tmp);
-	all->read[0] = ft_strdup(tmp);
 	if (ft_strncmp(tmp, "$$$ exec p", 10))
 		exit(0);
 	if (tmp[10] == '1')

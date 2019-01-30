@@ -27,10 +27,10 @@ void	count_blocs(t_all *inp)
 
 void	adj_cm(t_all *all)
 {
-	all->cm_self[0] /= all->nb_sqr;
-	all->cm_self[1] /= all->nb_sqr;
-	all->cm_ene[0] /= all->nb_sqr;
-	all->cm_ene[1] /= all->nb_sqr;
+	all->cm_self[0] /= all->cm_self[2];
+	all->cm_self[1] /= all->cm_self[2];
+	all->cm_ene[0] /= all->cm_ene[2];
+	all->cm_ene[1] /= all->cm_ene[2];
 }
 
 void	center_mass(t_all *all)
@@ -48,11 +48,13 @@ void	center_mass(t_all *all)
 			{
 				all->cm_self[1] += j;
 				all->cm_self[0] += i;
+				all->cm_self[2]++;
 			}
 			else if (all->map[j][i] != '.')
 			{
 				all->cm_ene[1] += j;
 				all->cm_ene[0] += i;
+				all->cm_ene[2]++;
 			}
 			i++;
 		}

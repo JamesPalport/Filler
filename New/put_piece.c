@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 12:27:37 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/22 12:32:03 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/01/30 16:07:28 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	in_lines(t_all *all, int *pos, int *put, int j)
 	pos_x = pos[0];
 	pos_y = pos[1] + j;
 	if (pos_y < 0)
-		pos_y = 0;
+		return ;//pos_y = 0;
 	while (i < all->size_piece[0] && pos_x < all->size_map[0])
 	{
 		if (pos_x < 0)
@@ -30,8 +30,10 @@ void	in_lines(t_all *all, int *pos, int *put, int j)
 		if (all->piece[j][i] == '*')
 		{
 			put[1]++;
-			if (all->map[pos_y][pos_x] != '.')
+			if (all->map[pos_y][pos_x] == all->letter[0])
 				put[0]++;
+			else if (all->map[pos_y][pos_x] != '.')
+				put[0]+= 10;
 		}
 		i++;
 		pos_x = i + pos[0];

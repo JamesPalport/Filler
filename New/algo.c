@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 15:49:00 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/22 12:16:13 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/01/30 15:18:18 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,30 +62,59 @@ int	det_score(t_all *all)
 	return (ft_max(min[0], min[1]));
 }
 
-void	aggro(char **score, t_all *all)
+void	pick_direc(t_all *all)
+{
+	if (all->vect[0] || all->vect[1])
+		return ;
+	if (abs(all->cm_self[0] - all->size_map[0] / 2)
+			< abs(all->cm_ene[0] - all->size_map[0] / 2))
+	{
+		all->vect[0] = 0;
+		all->vect[1] = 1;
+	}
+	else if (abs(all->cm_self[1] - all->size_map[1] / 2)
+			< abs(all->cm_ene[1] - all->size_map[1] / 2))
+	{
+		all->vect[0] = 1;
+		all->vect[1] = 0;
+	}
+	else
+	{
+		all->vect[0] = all->cm_ene[0] - all->cm_self[0];
+		all->vect[1] = all->cm_ene[1] - all->cm_self[1];
+	}
+	if (all->vect[0] > 0)
+		all->vect[0] = 1;
+	else if (all->vect[0] < 0)
+		all->vect[0] = -1;
+	if (all->vect[1] > 0)
+		all->vect[1] = 1;
+	else if (all->vect[1] < 0)
+		all->vect[1] = -1;
+}
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
+void	aggro(t_all *all)
 {
 	int i;
 	int	j;
-	int	aim[2];
-
-	aim[0] = all->cm_ene[0] - all->cm_self[0];
-	aim[1] = all->cm_ene[1] - all->cm_self[1];
-	if (aim[0] > 0)
-		aim[0] = 1;
-	else if (aim[0] < 0)
-		aim[0] = -1;
-	if (aim[1] > 0)
-		aim[1] = 1;
-	else if (aim[1] < 0)
-		aim[1] = -1;
-	j = 2 + aim[1] - 1;
-	while (j < 5 && j < 3 + aim[1])
+	
+	int	fd;
+	fd = open("vect", O_WRONLY | O_APPEND);
+	pick_direc(all);
+	ft_dprintf(fd, "vect :%d %d\ncm_ene\t:%d %d\ncm_self\t:%d %d\n-----\n",
+			all->vect[0], all->vect[1], all->cm_ene[0], all->cm_ene[1], all->cm_self[0], all->cm_self[1]);
+	j = 2 + all->vect[1] - 1;
+	while (j < 5 && j < 3 + all->vect[1])
 	{
-		i = 2 + aim[0] - 1;
-		while (i < 5 && i < 3 + aim[0])
+		i = 2 + all->vect[0] - 1;
+		while (i < 5 && i < 3 + all->vect[0])
 		{
 			if (i >= 0 && j >= 0)
-				score[j][i]++;
+				all->score[j][i] += 2;
 			i++;
 		}
 		j++;
@@ -115,7 +144,8 @@ void	score_map(t_all *all)
 		all->score[j][i] = '\0';
 		j++;
 	}
-	aggro(all->score, all);
+	pick_direc(all);
+	//	aggro(all);
 	all->score[j] = NULL;
 }
 
