@@ -9,23 +9,18 @@ void	init_all(t_all *all)
 	all->size_map[1] = 0;
 	all->size_piece[0] = 0;
 	all->size_piece[1] = 0;
-	all->letter[0] = 0;
-	all->letter[1] = 0;
-	all->letter[2] = 0;
-	all->cm_self[0] = 0;
-	all->cm_self[1] = 0;
-	all->cm_self[2] = 0;
+	all->letter = 0;
+	all->nb_sqr = 0;
+	all->extr_x[0] = -1;
+	all->extr_x[1] = -1;
+	all->extr_y[0] = -1;
+	all->extr_y[1] = -1;
 	all->cm_ene[0] = 0;
 	all->cm_ene[1] = 0;
 	all->cm_ene[2] = 0;
-	all->nb_sqr = 0;
 	all->pos[0] = -10;
 	all->pos[1] = -10;
-	all->vect[0] = 0;
-	all->vect[1] = 0;
 	all->end = 0;
-	all->retry[0] = 0;
-	all->retry[1] = 3;
 }
 
 void	begin_prog(t_all *all, int fd)
@@ -36,17 +31,9 @@ void	begin_prog(t_all *all, int fd)
 	if (ft_strncmp(tmp, "$$$ exec p", 10))
 		exit(0);
 	if (tmp[10] == '1')
-	{
-		all->letter[0] = 'O';
-		all->letter[1] = 'X';
-		all->letter[2] = 'x';
-	}
+		all->letter = 'O';
 	else if (tmp[10] == '2')
-	{
-		all->letter[0] = 'X';
-		all->letter[1] = 'O';
-		all->letter[2] = 'o';
-	}
+		all->letter = 'X';
 	else
 	exit(0);
 }

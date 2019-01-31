@@ -35,54 +35,40 @@ void	reader(t_all *all)
 {
 	int	fd;
 
-//	fd = open("test", O_RDONLY);
 	fd = 0;
+//	fd = open("out", O_RDONLY);
 	sleep(1);
 	begin_prog(all, fd);
 	while (!all->end)
 	{
-		if (!all->retry[0])
-		{
-			sleep(1);
-			get_size(all, fd);
-			if (!all->map)
-				init_map(all);
-			if (!all->map)
-				exit(0);
-			skip_lines(1, fd);
-			get_map(all, fd);
-			put_map(all);
-			get_size(all, fd);
-			get_piece(all, fd);
-			print_piece(all);
-			count_blocs(all);
-			center_mass(all);
-		}
+		sleep(1);
+		get_size(all, fd);
+		if (!all->map)
+			init_map(all);
+		if (!all->map)
+			exit(0);
+		skip_lines(1, fd);
+		get_map(all, fd);
+		put_map(all);
+		get_size(all, fd);
+		get_piece(all, fd);
+		print_piece(all);
+		count_blocs(all);
+		//			center_mass(all);
 		score_map(all);
-		pc_start(all);
-		end_map(all);
+//		pc_start(all);
 		pick_position(all);
-		if (is_poss(all, all->pos))
-		{
-			all->retry[1]++;
-			all->retry[0] = 0;
+		if (is_poss(all, all->pos[0], all->pos[1]))
 			ft_printf("%d %d\n", all->pos[1], all->pos[0]);
-		}
-		else if (!all->retry[1])
-		{
-			all->end = 1;
-			ft_printf("0 0\n");
-		}
 		else
 		{
-			all->retry[1]--;
-			all->retry[0] = 1;
-		/*	all->vect[0] = 0;
-			all->vect[1] = 0;*/
+			ft_putstr("0 0\n");
+			all->end = 1;
 		}
 	}
 //	close(fd);
 }
+
 int	main(void)
 {
 /*	char	*line;

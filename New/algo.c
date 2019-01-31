@@ -6,63 +6,35 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 15:49:00 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/30 15:18:18 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/01/31 13:49:50 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
 
-int	abs(int nb)
+int	det_score(t_all *all, int i, int j)
 {
-	return (nb >= 0 ? nb : -nb);
-}
+	int	nb;
+	int	dx;
+	int	dy;
 
-int	ft_min(int a, int b)
-{
-	if (a > b)
-		return b;
-	return (a);
-}
-
-int	ft_max(int a, int b)
-{
-	if (a < b)
-		return b;
-	return (a);
-}
-
-int	det_score(t_all *all)
-{
-	int	xm;
-	int	i;
-	int	j;
-	int	min[2];
-
-	j = -3;
-	xm = -3;
-	min[0] = 10;
-	min[1] = 10;
-	while (all->pos[1] + j < 0)
-		j++;
-	while (all->pos[0] + xm < 0)
-		xm++;
-	while (j < 3)
+	dx = i - all->size_map[0] / 2;
+	dy = j - all->size_map[1] / 2;
+	dx = dx >= 0 ? dx : -dx;
+	dy = dy >= 0 ? dy : -dy;
+	nb = dx + dy + 1;
+	if (all->cm_ene[2] >= 20)
 	{
-		i = xm;
-		while (i < 3)
-		{
-			if (all->map[all->pos[1] + j][all->pos[0] + i] != '.')
-			{
-				min[0] = ft_min(min[0], i);
-				min[1] = ft_min(min[1], j);
-			}
-			i++;
-		}
+		dx = i - all->cm_ene[0];
+		dy = j - all->cm_ene[1];
+		dx = dx >= 0 ? dx : -dx;
+		dy = dy >= 0 ? dy : -dy;
+		nb += dx + dy;
 	}
-	return (ft_max(min[0], min[1]));
+	return (nb);
 }
 
-void	pick_direc(t_all *all)
+/*void	pick_direc(t_all *all)
 {
 	if (all->vect[0] || all->vect[1])
 		return ;
@@ -91,13 +63,13 @@ void	pick_direc(t_all *all)
 		all->vect[1] = 1;
 	else if (all->vect[1] < 0)
 		all->vect[1] = -1;
-}
+}*/
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 
-void	aggro(t_all *all)
+/*void	aggro(t_all *all)
 {
 	int i;
 	int	j;
@@ -119,85 +91,78 @@ void	aggro(t_all *all)
 		}
 		j++;
 	}
+}*/
+
+void	end_map(t_all *all)
+{
+	int	i;
+	int	j;
+
+	j = all->extr_y[0];
+	while (j < all->extr_y[1])
+	{
+		i = all->extr_x[0];
+		while (i < all->extr_x[1])
+		{
+			if (is_poss(all, i, j))
+			all->score[j][i] = det_score(all, i, j);
+			i++;
+		}
+		j++;
+	}
 }
 
-void	score_map(t_all *all)
+int		score_map(t_all *all)
 {
 	int	i;
 	int	j;
 
 	j = 0;
-	if (!(all->score = (char **)malloc(sizeof(char *) * 5)))
-		return ;
-	while (j < 7)
-		if (!(all->score[j++] = (char *)malloc(sizeof(char) * 5)))
-			return ;
+	if (all->score == NULL)
+	{
+		if (!(all->score = (int **)malloc(sizeof(int *) * (all->size_map[1]))))
+			return (-1);
+		while (j < all->size_map[1])
+			if (!(all->score[j++] =
+						(int *)malloc(sizeof(int) * (all->size_map[0]))))
+	 			return (-1);
+	  }
 	j = 0;
-	while (j < 5)
+	while (j < all->size_map[1])
 	{
 		i = 0;
-		while (i < 5)
-		{
-			all->score[j][i] = '3' - ft_max(abs(i - 2), abs(j - 2));
-			i++;
-		}
-		all->score[j][i] = '\0';
+		while (i < all->size_map[0])
+			all->score[j][i++] = 0;
 		j++;
 	}
-	pick_direc(all);
+	set_extr(all);
+	end_map(all);
 	//	aggro(all);
-	all->score[j] = NULL;
+	return (1);
 }
 
 void	pick_position(t_all *all)
 {
-	int	position[2];
 	int	i;
 	int	j;
-	int	max;
+	int	min;
 
 	j = 0;
-	position[0] = -1;
-	position[1] = -1;
-	max = -1;
-	while (j < 5)
+	min = -1;
+	while (j < all->size_map[1])
 	{
 		i = 0;
-		while (i < 5)
+		while (i < all->size_map[0])
 		{
-			if (all->score[j][i] && all->score[j][i] > max)
+			if (all->score[j][i] && (min == -1 ||  all->score[j][i] < min))
 			{
-				max = all->score[j][i];
-				position[0] = i + all->pos[0] - 2;
-				position[1] = j + all->pos[1] - 2;
+				min = all->score[j][i];
+				all->pos[0] = i;
+				all->pos[1] = j;
 			}
 			i++;
 		}
 		j++;
 	}
-	all->pos[0] = position[0];
-	all->pos[1] = position[1];
 }
 
-void	end_map(t_all *all)
-{
-	int	p[2];
-	int	i;
-	int	j;
-
-	j = 0;
-	while (j < 5)
-	{
-		i = 0;
-		while (i < 5)
-		{
-			p[0] = i + all->pos[0] - 2;
-			p[1] = j + all->pos[1] - 2;
-			all->score[j][i] *= is_poss(all, p);
-			if (!all->score[j][i])
-				all->score[j][i] = '0';
-			i++;
-		}
-		j++;
-	}
-}
