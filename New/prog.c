@@ -37,11 +37,9 @@ void	reader(t_all *all)
 
 	fd = 0;
 //	fd = open("out", O_RDONLY);
-	sleep(1);
 	begin_prog(all, fd);
 	while (!all->end)
 	{
-		sleep(1);
 		get_size(all, fd);
 		if (!all->map)
 			init_map(all);
@@ -52,7 +50,7 @@ void	reader(t_all *all)
 		put_map(all);
 		get_size(all, fd);
 		get_piece(all, fd);
-		print_piece(all);
+//		print_piece(all);
 		count_blocs(all);
 		//			center_mass(all);
 		score_map(all);

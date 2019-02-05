@@ -6,11 +6,41 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/11 15:49:00 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/01/31 13:49:50 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/02/05 15:47:02 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
+
+int	ft_sides(t_all *all, int i, int j)
+{
+	if (i <= all->size_piece[0]  || j <= all->size_piece[1]
+			|| i >= all->size_map[0] - all->size_piece[0]
+			|| j >= all->size_map[1] - all->size_piece[1])
+		return (1);
+	return (0);
+}
+
+int	ft_aggro(t_all *all, int i, int j)
+{
+	int	cm[2];
+
+	cm[0] = all->cm_ene[0] - all->size_map[0] / 2;
+	cm[1] = all->cm_ene[1] - all->size_map[1] / 2;
+	if (cm[0] < 0 && i < all->size_map[0] / 2)
+		return (2);
+	else if (cm[0] < 0 && i < all->size_map[0] / 2 && all->extr_x[0] != 0)
+		return (2);
+	else if (cm[0] > 0 && i > all->size_map[0] / 2
+			&& all->extr_x[1] != all->size_map[0])
+		return (2);
+	else if (cm[1] < 0 && j < all->size_map[1] / 2 && all->extr_y[0] != 0)
+		return (2);
+	else if (cm[1] > 0 && j > all->size_map[1] / 2
+			&& all->extr_y[1] != all->size_map[1])
+		return (2);
+	return (0);
+}
 
 int	det_score(t_all *all, int i, int j)
 {
@@ -18,19 +48,23 @@ int	det_score(t_all *all, int i, int j)
 	int	dx;
 	int	dy;
 
-	dx = i - all->size_map[0] / 2;
-	dy = j - all->size_map[1] / 2;
-	dx = dx >= 0 ? dx : -dx;
-	dy = dy >= 0 ? dy : -dy;
-	nb = dx + dy + 1;
-	if (all->cm_ene[2] >= 20)
+/*		dx = i - all->size_map[0] / 2;
+		dy = j - all->size_map[1] / 2;
+		dx = dx >= 0 ? dx : -dx;
+		dy = dy >= 0 ? dy : -dy;
+	nb = dx + dy;
+	if (all->cm_ene[2] >= (all->size_piece[0] + all->size_piece[1]))
 	{
+		dx = 0;
+		dy = 0;*/
 		dx = i - all->cm_ene[0];
 		dy = j - all->cm_ene[1];
 		dx = dx >= 0 ? dx : -dx;
 		dy = dy >= 0 ? dy : -dy;
-		nb += dx + dy;
-	}
+//	}
+	nb = dx * dx + dy * dy;
+//	nb -= ft_aggro(all, i, j);
+//	nb -= ft_sides(all, i, j);
 	return (nb);
 }
 
@@ -165,4 +199,3 @@ void	pick_position(t_all *all)
 		j++;
 	}
 }
-
