@@ -15,15 +15,12 @@
 int		skip_lines(int n, int fd)
 {
 	int		i;
-	char	*line;
+	char	c;
 
 	i = 0;
-	line = NULL;
-	while (i < n && get_next_line(fd, &line))
-	{
-		i++;
-		free(line);
-	}
+	while (i < n && read(fd, &c, 1) > 0)
+		if (c == '\n')
+			i++;
 	if (i != n)
 		return (0);
 	return (1);
@@ -78,4 +75,30 @@ int		freeall(t_all *all)
 	all->piece = NULL;
 	all->end = 1;
 	return (0);
+}
+
+int		ft_read(int fd, char **line, int size)
+{
+	int	cnt;
+	int	r;
+
+	if (!size)
+		return (0);
+	if (!(*line = (char *)malloc(sizeof(char) * (size + 1))))
+		return (-1);
+	cnt = 0;
+	r = 1;
+	while (cnt < size && r > 0)
+	{
+		r = read(fd, *line + cnt, size - cnt);
+		cnt += r;
+	}
+	(*line)[cnt] = '\0';
+	if (r < 0)
+	{
+		free(*line);
+		*line = NULL;
+		return (-1);
+	}
+	return (cnt);
 }

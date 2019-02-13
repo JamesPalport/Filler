@@ -12,48 +12,53 @@
 
 #include "filler.h"
 
-void	extr_size(t_all *all, char *line, int dst)
-{
-	int	i;
-	int	prev[2];
-
-	i = 0;
-	if (dst == 0)
-	{
-		prev[0] = all->size_map[0];
-		prev[1] = all->size_map[1];
-		all->size_map[1] = ft_atoi(line);
-		while (ft_isdigit(line[i]))
-			i++;
-		all->size_map[0] = ft_atoi(line + i);
-		if (prev[0] && prev[1])
-			if (prev[0] != all->size_map[0] || (prev[1] != all->size_map[1]))
-				return ;
-	}
-	if (dst == 1)
-	{
-		all->size_piece[1] = ft_atoi(line);
-		while (ft_isdigit(line[i]))
-			i++;
-		all->size_piece[0] = ft_atoi(line + i);
-	}
-}
-
-int		get_size(t_all *all, int fd)
+int		get_size_map(t_all *all, int fd)
 {
 	char	*tmp;
+	char	c;
+	int		num;
 
-	if (get_next_line(fd, &tmp) <= 0)
-	{
-		if (tmp)
-			free(tmp);
+	if (ft_read(fd, &tmp, 8) <= 0)
 		return (0);
-	}
-	if (!ft_strncmp("Plateau", tmp, 7))
-		extr_size(all, tmp + 8, 0);
-	else if (!ft_strncmp("Piece", tmp, 5))
-		extr_size(all, tmp + 6, 1);
+	if (ft_strncmp("Plateau", tmp, 7))
+		return (0);
 	free(tmp);
+	num = 0;
+	while (read(fd, &c, 1) > 0 && ft_isdigit(c))
+		num = num * 10 + c - '0';
+	if (all->size_map[1] && all->size_map[1] != num)
+		return (0);
+	all->size_map[1] = num;
+	num = 0;
+	while (read(fd, &c, 1) > 0 && ft_isdigit(c))
+		num = num * 10 + c - '0';
+	if (all->size_map[0] && all->size_map[0] != num)
+		return (0);
+	all->size_map[0] = num;
+	skip_lines(1, fd);
+	return (1);
+}
+
+int		get_size_piece(t_all *all, int fd)
+{
+	char	*tmp;
+	char	c;
+	int		num;
+
+	if (ft_read(fd, &tmp, 6) <= 0)
+		return (0);
+	if (ft_strncmp("Piece", tmp, 5))
+		return (0);
+	free(tmp);
+	num = 0;
+	while (read(fd, &c, 1) > 0 && ft_isdigit(c))
+		num = num * 10 + c - '0';
+	all->size_piece[1] = num;
+	num = 0;
+	while (read(fd, &c, 1) > 0 && ft_isdigit(c))
+		num = num * 10 + c - '0';
+	all->size_piece[0] = num;
+	skip_lines(1, fd);
 	return (1);
 }
 
@@ -61,22 +66,27 @@ int		get_map(t_all *all, int fd)
 {
 	int		i;
 	char	*line;
+	char	c;
 
 	i = 0;
 	line = NULL;
 	while (i < all->size_map[1])
 	{
-		if (get_next_line(fd, &line) < 0)
+		c = 0;
+		while (c != ' ')
+			if (read(fd, &c, 1) < 0)
+				return (-1);
+		if (ft_read(fd, &line, all->size_map[0]) < 0)
 			return (0);
-		if (!check_line(all, line + 4, 0))
+		if (!check_line(all, line, 0))
 		{
 			free(line);
 			return (0);
 		}
-		ft_strncpy(all->map[i], line + 4, all->size_map[0]);
+		ft_strncpy(all->map[i], line, all->size_map[0]);
 		free(line);
-		line = NULL;
 		i++;
+		skip_lines(1, fd);
 	}
 	return (1);
 }
@@ -90,7 +100,7 @@ int		get_piece(t_all *all, int fd)
 	i = 0;
 	while (i < all->size_piece[1])
 	{
-		if (get_next_line(fd, &line) < 0)
+	if (ft_read(fd, &line, all->size_piece[0]) < 0)
 			return (0);
 		if (!check_line(all, line, 1))
 		{
@@ -99,15 +109,15 @@ int		get_piece(t_all *all, int fd)
 		}
 		ft_strncpy(all->piece[i], line, all->size_piece[0]);
 		free(line);
-		line = NULL;
 		i++;
+		skip_lines(1, fd);
 	}
 	return (1);
 }
 
 int		reader(t_all *all, int fd)
 {
-	if (!get_size(all, fd))
+	if (!get_size_map(all, fd))
 		return (freeall(all));
 	if (!all->map)
 		init_map(all);
@@ -116,7 +126,7 @@ int		reader(t_all *all, int fd)
 	skip_lines(1, fd);
 	if (!get_map(all, fd))
 		return (freeall(all));
-	if (!get_size(all, fd))
+	if (!get_size_piece(all, fd))
 		return (freeall(all));
 	if (!get_piece(all, fd))
 		return (freeall(all));

@@ -38,6 +38,7 @@ typedef struct	s_all
 int				skip_lines(int n, int fd);
 void			freedbchar(char ***src);
 int				freeall(t_all *all);
+int				ft_read(int fd, char **line, int size);
 
 void			init_all(t_all *all);
 int				begin_prog(t_all *all, int fd);

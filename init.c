@@ -35,23 +35,33 @@ void	init_all(t_all *all)
 	all->end = 0;
 }
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 int		begin_prog(t_all *all, int fd)
 {
 	char	*tmp;
+	char	num;
 
-	get_next_line(fd, &tmp);
+	if (ft_read(fd, &tmp, 10) == -1)
+		return (0);
 	if (ft_strncmp(tmp, "$$$ exec p", 10))
 	{
 		ft_dprintf(2, "%s err\n", tmp);
 		return (0);
 	}
-	if (tmp[10] == '1')
+	free(tmp);
+	if (read(fd, &num, 1) <= 0)
+		return (0);
+	if (num == '1')
 		all->letter = 'O';
-	else if (tmp[10] == '2')
+	else if (num == '2')
 		all->letter = 'X';
 	else
 		return (0);
-	free(tmp);
+	if (!skip_lines(1, fd))
+		return (0);
 	return (1);
 }
 
