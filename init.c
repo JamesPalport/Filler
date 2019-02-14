@@ -49,6 +49,7 @@ int		begin_prog(t_all *all, int fd)
 	if (ft_strncmp(tmp, "$$$ exec p", 10))
 	{
 		ft_dprintf(2, "%s err\n", tmp);
+		free(tmp);
 		return (0);
 	}
 	free(tmp);
