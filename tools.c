@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/07 14:51:21 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/02/08 14:29:26 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/02/15 09:47:58 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int		ft_read(int fd, char **line, int size)
 		cnt += r;
 	}
 	(*line)[cnt] = '\0';
-	if (r < 0)
+	if (cnt != size || r <= 0)
 	{
 		free(*line);
 		*line = NULL;

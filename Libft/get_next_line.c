@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/16 14:32:35 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/02/08 15:38:06 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/02/15 10:05:23 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ char	*ft_stradd(char **str, char *src, size_t size)
 {
 	char	*line;
 	int		len;
-	static int i;
 
 	if (!str[0] || !src[0])
 		return (NULL);
@@ -39,7 +38,6 @@ char	*ft_stradd(char **str, char *src, size_t size)
 	ft_memcpy(line, *str, ft_strlen(*str));
 	ft_memcpy(line + len, src, size);
 	ft_strdel(str);
-	i++;
 	return (line);
 }
 

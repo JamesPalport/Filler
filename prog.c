@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/07 14:49:03 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/02/08 16:24:18 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/02/15 10:07:58 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int		main(void)
 		if (reader(&all, 0))
 			prog(&all);
 		else
-			ft_putstr("Error while reading");
+			ft_putendl_fd("Error", 2);
 	}
 	freeall(&all);
 	return (0);

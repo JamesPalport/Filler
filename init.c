@@ -6,7 +6,7 @@
 /*   By: amerrouc <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/07 14:42:56 by amerrouc          #+#    #+#             */
-/*   Updated: 2019/02/08 15:16:32 by amerrouc         ###   ########.fr       */
+/*   Updated: 2019/02/15 10:05:43 by amerrouc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,6 @@ void	init_all(t_all *all)
 	all->end = 0;
 }
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-
 int		begin_prog(t_all *all, int fd)
 {
 	char	*tmp;
@@ -48,7 +44,7 @@ int		begin_prog(t_all *all, int fd)
 		return (0);
 	if (ft_strncmp(tmp, "$$$ exec p", 10))
 	{
-		ft_dprintf(2, "%s err\n", tmp);
+		ft_putendl_fd("Error", 2);
 		free(tmp);
 		return (0);
 	}
